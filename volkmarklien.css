@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
+
+:root {
+    --blue-accent: #ffffff; /* Text is now white to show against background */
+    --bg-color: #000000;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    color: var(--blue-accent);
+    overflow-y: hidden; 
+
+    /* FIXED BACKGROUND IMAGE */
+    background-image: url('rezeptionshaltungen03.original.width-1500.jpg');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: var(--bg-color); /* Fallback color */
+}
+
+/* Pure CSS Horizontal Scroll Container */
+.horizontal-scroller {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 100vh;
+    width: 100vw;
+    scroll-snap-type: x proximity;
+    scroll-behavior: smooth;
+    align-items: center;
+    padding: 0 10vw;
+    background: transparent; 
+}
+
+/* Scrollbar styling */
+.horizontal-scroller::-webkit-scrollbar {
+    height: 6px;
+}
+.horizontal-scroller::-webkit-scrollbar-track {
+    background: transparent;
+}
+.horizontal-scroller::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+
+.content-chunk {
+    flex: 0 0 400px; 
+    margin-right: 100px;
+    scroll-snap-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.title-chunk {
+    flex: 0 0 500px;
+}
+
+h1 {
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+    font-style: italic;
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+h2 { 
+    font-family: 'Crimson Text', serif;
+    font-weight: 400;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+p {
+    font-family: 'Crimson Text', serif;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+marquee {
+    font-family: 'Crimson Text', serif;
+    color: white;
+}
+
+a {
+    color: white;
+}
+
+.scroll-hint {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+    font-size: 0.8rem;
+    color: white;
+    opacity: 0.6;
+}
+
+/* Back to Home - Arrow Only */
+.back-home {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 1000;
+    text-decoration: none;
+    
+    /* Remove all background/circle styling */
+    background: none;
+    border: none;
+    padding: 0;
+    
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.back-home .arrow {
+    color: #ffffff; 
+    font-size: 2rem; 
+    font-family: serif;
+}
+
+
+.back-home:hover {
+    transform: scale(1.2);
+    opacity: 0.8;
+}

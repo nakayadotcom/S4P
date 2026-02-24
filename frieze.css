@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
+
+body {
+    font-family: 'Crimson Text', serif;
+    font-weight: ;
+    margin: 0; padding: 0;
+    color: #ffffff;
+    line-height: 1.6;
+
+       background-image: linear-gradient(rgba(39, 34, 34, 0.7), rgba(47, 44, 44, 0.7)), url('16_carsten-nicolai_perfect-square_Web.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-color: #ffffff;
+    
+    overflow-x: auto;
+    height: 100vh;
+}
+
+header { text-align: center; padding: 60px 20px; }
+h1 { font-size: 2em; max-width: 800px; margin: 0 auto 15px; }
+h2 { font-size: 1em; text-transform: uppercase; letter-spacing: 2px; }
+
+.image-container { text-align: center; margin-bottom: 40px; }
+.image-placeholder { 
+    background: #000000; 
+    max-width: 1000px; 
+    margin: 0 auto; 
+    border: 1px solid #eee;
+    overflow: hidden;
+}
+.image-placeholder img { width: 100%; height: auto; display: block; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px 80px; }
+.intro-section { 
+    max-width: 1000px; 
+    margin: 0 auto 50px; 
+    font-size: 1.2em;  }
+
+
+.scroll-row {
+    overflow-x: auto;
+    white-space: nowrap;
+    cursor: grab;
+    margin-bottom: 50px;
+    scrollbar-width: none;
+}
+.scroll-row::-webkit-scrollbar { display: none; }
+
+.scroll-content { display: inline-flex; gap: 40px; }
+.grid-item { width: 350px; white-space: normal; flex-shrink: 0; }
+.grid-item h3 { margin-top: 0; font-size: 1.2em; }
+
+@media (max-width: 768px) {
+    .grid-item { width: 80vw; }
+}

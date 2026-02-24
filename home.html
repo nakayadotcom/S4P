@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sound Art — A Webzine</title>
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+
+    <div class="video-background">
+        <iframe id="vimeo-player" src="https://player.vimeo.com/video/101003638?autoplay=1&loop=1&muted=0&autopause=0" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+    </div>
+
+    <div class="container">
+
+        <h1>Sound Art — <br>A Webzine</h1>
+    
+      
+        <figure class="image-block" style="--i:0;">
+            <img src="david tudor.png" alt="David Tudor" onerror="this.src='https://via.placeholder.com/220?text=David+Tudor'">
+            <figcaption><a href="moma.html">Sound Is a Creative Material for Children's Play</a></figcaption>
+        </figure>
+
+  
+        <figure class="image-block" style="--i:1;">
+            <img src="JohnCage2.jpg" alt="John Cage" onerror="this.src='https://via.placeholder.com/220?text=John+Cage'">
+            <figcaption><a href="johncagehtml2.html">The Future of Music — Credo</a></figcaption>
+        </figure>
+
+  
+        <figure class="image-block" style="--i:2;">
+            <img src="maxresdefault.jpg" alt="Volkmar Klien" onerror="this.src='https://via.placeholder.com/220?text=Volkmar+Klien'">
+            <figcaption><a href="volkmarkleinhtml2.html">Consonances, Community, and Reflexivity</a></figcaption>
+        </figure>
+
+ 
+        <figure class="image-block" style="--i:3;">
+            <img src="prototypes.jpg" alt="Brandon LaBelle" onerror="this.src='https://via.placeholder.com/220?text=Brandon+LaBelle'">
+            <figcaption><a href="artforumhtml2.html">SOUND ART is an uncertain category</a></figcaption>
+        </figure>
+
+
+        <figure class="image-block" style="--i:4;">
+            <img src="RS139675_kissing_through_a_curtain_090-lpr-1536x1026-1.jpg" alt="Frieze Sound Art" onerror="this.src='https://via.placeholder.com/220?text=Frieze+Art'">
+            <figcaption><a href="friezehtml.html">11 Essential Sound Artworks</a></figcaption>
+        </figure>
+
+  
+         <figure class="image-block" style="--i:5;">
+            <img src="4BD58AF8-95FA-DA38-9C8857B48791DCE1_x.jpg" alt="Videos" onerror="this.src='https://via.placeholder.com/220?text=Videos'">
+            <figcaption><a href="videos.html">Videos</a></figcaption>
+        </figure>
+
+
+         <figure class="image-block" style="--i:6;">
+            <img src="04SOUND1_SPAN-superJumbo.jpg" alt="About" onerror="this.src='https://via.placeholder.com/220?text=About'">
+            <figcaption><a href="about.html">About</a></figcaption>
+        </figure>
+    </div>
+
+    <script>
+        document.addEventListener('click', function() {
+            const iframe = document.getElementById('vimeo-player');
+            const currentSrc = iframe.src;
+            iframe.src = currentSrc;
+        }, { once: true });
+    </script>
+
+</body>
+</html>

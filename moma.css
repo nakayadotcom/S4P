@@ -1,0 +1,152 @@
+/* Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Crimson Text', serif;
+    font-size: 18px;
+    line-height: 1.6;
+    color: #dbecff;
+    background-color: #000000;
+    
+    /* Keeping the fixed background setup */
+    background-image: url('b3920e6ccc65f9e272930429edde849b3cee5ce1-1323x811.avif');
+    background-size: 50%;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    
+    /* Prevent the body itself from scrolling to enable internal column scrolling */
+    overflow: hidden;
+}
+
+/* Three Column Layout Container */
+.columns-container {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: 100vh; /* Set height to viewport height */
+    overflow: hidden; /* Prevent container-level scrolling */
+}
+
+/* Column Styles - Modified for independent scrolling */
+.column {
+    flex: 1;
+    min-width: 300px;
+    padding: 60px 40px;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    
+    /* Enable independent vertical scrolling */
+    height: 100%;
+    overflow-y: auto;
+    
+    /* Smooth scrolling behavior */
+    scroll-behavior: smooth;
+}
+
+/* Optional: Hide scrollbars for a cleaner look while maintaining functionality (WebKit) */
+.column::-webkit-scrollbar {
+    width: 4px;
+}
+.column::-webkit-scrollbar-track {
+    background: transparent;
+}
+.column::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.column:last-child {
+    border-right: none;
+}
+
+/* Navigation */
+.nav-back {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: #dbecff;
+    font-size: 0.9rem;
+    margin-bottom: 40px;
+}
+
+/* Typography */
+h1 {
+    font-size: 2.5rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    line-height: 1.1;
+}
+
+h2 {
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+.author-date {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 40px;
+}
+
+p {
+    margin-bottom: 25px;
+}
+
+h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 40px 0 20px 0;
+}
+
+/* Images */
+figure {
+    margin: 40px 0;
+}
+
+img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 15px;
+}
+
+figcaption {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: #555;
+}
+
+.bio {
+    font-style: italic;
+    font-size: 0.9rem;
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 900px) {
+    body {
+        overflow: auto; /* Allow normal scrolling on mobile */
+    }
+    .columns-container {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+    }
+    .column {
+        flex: none;
+        width: 100%;
+        height: auto;
+        overflow-y: visible;
+        border-right: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+}

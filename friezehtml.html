@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frieze | 11 Essential Sound Artworks</title>
+    <link rel="stylesheet" href="frieze.css">
+</head>
+<body>
+    <header>
+        <h1>11 Essential Sound Artworks, from Reviled Noise Orchestras to Protest-Minded Installations</h1>
+        <h2>By Tessa Solomon</h2>
+    </header>
+
+    <div class="container">
+        <div class="intro-section">
+            <p class="intro">
+                In 1979, the Museum of Modern Art in New York presented a modest exhibition called "Sound Art." The museum's small media art gallery could only accommodate one artwork at a time, so the three works in the show, by Maggi Payne, Connie Beckley, and Julia Heyward, took turns on display.
+            </p>
+            <p class="intro">
+                In essence, London had helped define a medium that was newly emergent back then, but her explanation offered few parameters—which was exactly the point. Below, a look back at 11 essential sound artworks.
+            </p>
+        </div>
+
+        <div class="scrolling-rows">
+            <div class="row-container">
+                <div class="scroll-row">
+                    <div class="scroll-content">
+                        <div class="grid-item">
+                            <h3>Luigi Russolo, Gran Concerto Futuristico (1917)</h3>
+                            <p>Luigi Russolo is best known as a painter associated with the Futurist movement, but he's also considered one of the first experimental noise artists.</p>
+                        </div>
+                        <div class="grid-item">
+                            <h3>Marcel Duchamp, Erratum Musical (1913)</h3>
+                            <p>Duchamp dedicated much of his time between 1912 and 1915 to musical composition. Erratum Musical was a score written for three voices and arranged by chance.</p>
+                        </div>
+                        <div class="grid-item">
+                            <h3>John Cage, 4'33" (1952)</h3>
+                            <p>4'33" is a three-movement composition consisting of four minutes and 33 seconds of silence, making spectators aware of ambient sounds.</p>
+                        </div>
+                        <div class="grid-item">
+                            <h3>Bill Fontana, Distant Trains (1984)</h3>
+                            <p>Live microphones in Köln Hauptbahnhof transmitted real-time acoustics, recreating a phantom sonic environment in Berlin.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-container">
+                <div class="scroll-row">
+                    <div class="scroll-content">
+                        <div class="grid-item">
+                            <h3>Max Neuhaus, Times Square (1977–92)</h3>
+                            <p>Neuhaus's work features a pulsating drone that emanates 24/7 from a subway steam escape hatch in Times Square.</p>
+                        </div>
+                        <div class="grid-item">
+                            <h3>Carsten Nicolai, Reflektor Distortion (2016)</h3>
+                            <p>A rotating water basin was hit by low sound frequencies, making the invisible shape of sound visible to the human eye.</p>
+                        </div>
+                        <div class="grid-item">
+                            <h3>Jem Finer, Longplayer (1999)</h3>
+                            <p>A piece of ambient music that started on Dec 31, 1999, and will finish in the year 3000 using Tibetan singing bowls.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 60px; text-align: center;">
+            <a href="home.html" style="color: #ffffff; text-decoration: none; font-weight: bold; border: 1px solid #ffffff; padding: 10px 20px;">Home</a>
+        </div>
+    </div>
+
+    <script>
+        const sliders = document.querySelectorAll('.scroll-row');
+        sliders.forEach(slider => {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+            slider.addEventListener('mousedown', (e) => {
+                isDown = true;
+                slider.style.cursor = 'grabbing';
+                startX = e.pageX - slider.offsetLeft;
+                scrollLeft = slider.scrollLeft;
+            });
+            slider.addEventListener('mouseleave', () => { isDown = false; });
+            slider.addEventListener('mouseup', () => { isDown = false; slider.style.cursor = 'grab'; });
+            slider.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - slider.offsetLeft;
+                const walk = (x - startX) * 2;
+                slider.scrollLeft = scrollLeft - walk;
+            });
+        });
+    </script>
+</body>
+</html>

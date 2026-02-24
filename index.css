@@ -1,0 +1,56 @@
+/* Container to hold the video background */
+.video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    background: black;
+}
+
+/* Scale Vimeo iframe to cover the screen */
+.video-container iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 100vh;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+/* Maintain 16:9 aspect ratio coverage */
+@media (min-aspect-ratio: 16/9) {
+    .video-container iframe {
+        width: 100vw;
+        height: 56.25vw; /* 100 * 9 / 16 */
+    }
+}
+
+@media (max-aspect-ratio: 16/9) {
+    .video-container iframe {
+        width: 177.78vh; /* 100 * 16 / 9 */
+        height: 100vh;
+    }
+}
+
+.enter-link {
+    color: white;
+    font-size: 3rem; /* 5xl equivalent */
+    font-weight: 200; /* extralight */
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    transition: all 0.5s ease;
+    text-decoration: none;
+}
+
+.enter-link:hover {
+    letter-spacing: 0.6em;
+    color: #d1d5db; /* gray-300 */
+}
+
+

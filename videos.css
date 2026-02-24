@@ -1,0 +1,78 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #000;
+    /* Background image with overlay for readability */
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('Acousmonium_1980_photo_Laszlo_Ruszka__c_Ina.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    
+    color: #fff;
+    font-family: 'Crimson Text', serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Back Arrow Navigation */
+.back-home {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    color: white;
+    text-decoration: none;
+    font-size: 2rem;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+.back-home:hover {
+    opacity: 0.6;
+}
+
+.archive-list {
+    width: 90vw;
+    max-width: 1400px;
+    position: relative;
+    z-index: 1;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    margin: 0;
+}
+
+.archive-row {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    padding: 30px 10px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 400; 
+    transition: color 0.3s ease;
+}
+
+
+.archive-row:hover {
+    color: rgb(176, 219, 255);
+}
+
+.title {
+    font-size: 1.2rem;
+}
+
+.category {
+    font-size: 1.2rem;
+    opacity: 0.8;
+}

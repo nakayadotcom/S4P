@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Tone Transmutation</title>
+    <!-- Using specific versions of p5.js for stability -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/addons/p5.sound.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
+        
+        :root {
+            --font-main: "Inter", sans-serif;
+            --bg: #efefef; 
+        }
+
+        body { 
+            margin: 0; 
+            background: var(--bg); 
+            color: #1a1a1a; 
+            overflow: hidden; 
+            font-family: var(--font-main);
+            display: flex;
+        }
+        
+        canvas { display: block; }
+
+        #canvas-container {
+            flex-grow: 1;
+            height: 100vh;
+            overflow: hidden;
+            background: #efefef;
+            position: relative;
+            transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .controls-panel {
+            width: 320px;
+            height: 100vh;
+            background: #efefef;
+            border-left: 1px solid rgba(0,0,0,0.1);
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            position: absolute;
+            right: -320px;
+            transition: right 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .controls-panel.visible {
+            right: 0;
+        }
+
+        .band-card { 
+            margin-bottom: 24px; 
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .control-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+            margin: 8px 0;
+            cursor: pointer;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 2px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            height: 18px;
+            width: 18px;
+            border-radius: 50%; 
+            background: #000;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -8px;
+            border: 2px solid #efefef;
+            box-shadow: none;
+        }
+
+        #init-audio-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 200;
+            text-align: center;
+        }
+
+        .btn-init {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 10px 20px;
+            background: #000;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: opacity 0.3s;
+        }
+
+        .top-nav {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 150;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-item {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-item:hover {
+            opacity: 0.6;
+        }
+
+        .symbol-btn {
+            font-size: 16px;
+            line-height: 1;
+            width: 20px;
+            height: 20px;
+        }
+
+        #about-popup {
+            position: absolute;
+            top: -500px; 
+            left: 20px;
+            width: 280px;
+            background: #fff;
+            border: 1px solid rgba(0,0,0,0.1);
+            padding: 20px;
+            z-index: 140;
+            transition: top 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        #about-popup.open {
+            top: 60px;
+        }
+
+        .label-group { 
+            display: flex; 
+            justify-content: space-between; 
+            font-size: 11px; 
+            color: #333; 
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .section-header {
+            font-size: 10px; 
+            opacity: 0.7;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #000;
+        }
+
+        #status-msg {
+            position: absolute;
+            bottom: 12px;
+            left: 14px;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        #recording-indicator {
+            display: none;
+            width: 6px;
+            height: 6px;
+            background: red;
+            border-radius: 50%;
+            margin-left: 6px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body onmousemove="handleMouseMove()">
+
+    <div id="canvas-container">
+        <div class="top-nav">
+            <div id="about-trigger" class="nav-item border-b border-black pb-0.5" onclick="toggleAbout()">About</div>
+            <div id="pause-trigger" class="nav-item symbol-btn" title="Pause/Resume" onclick="togglePause()">
+                <span id="pause-icon">⏸</span>
+            </div>
+            <div id="record-trigger" class="nav-item symbol-btn" title="Record" onclick="toggleRecord()">
+                <span id="record-icon">●</span>
+                <div id="recording-indicator"></div>
+            </div>
+        </div>
+
+        <div id="about-popup">
+            <h2 class="text-[13px] font-bold mb-3 border-b border-black pb-1">Can you hear the room now (in A minor?)</h2>
+            <p class="text-[12px] leading-relaxed font-medium text-black opacity-80">
+                This project remaps the unnoticed frequencies of your environment into an A minor harmonic scale. By driving sine and sawtooth oscillators with the room's ambient noise, it translates the static of the background into a presence that allows you to engage with the unnoticed.
+            </p>
+        </div>
+
+        <div id="init-audio-overlay">
+            <button id="mainInit" class="btn-init" onclick="startAudio()">Initialize Audio</button>
+        </div>
+        <div id="status-msg">Click Initialize to Start</div>
+    </div>
+
+    <div id="controls" class="controls-panel">
+        <h1 class="text-[16px] font-normal mb-6 border-b border-black pb-2 tracking-tight uppercase">Room Tone Transmutation</h1>
+        
+        <div id="band-sliders"></div>
+        
+        <div class="mt-auto pt-4 border-t border-black/10">
+            <div class="label-group mb-2">
+                <span class="section-header">Space Decay (Cathedral)</span>
+                <span id="reverb-val">8.0s</span>
+            </div>
+            <input type="range" id="reverbSlider" min="1" max="15" step="0.5" value="8">
+        </div>
+    </div>
+
+    <script>
+        let mic, fft, reverb, recorder, soundFile;
+        let isStarted = false;
+        let isPaused = false;
+        let isRecording = false;
+        
+        // Visibility Logic State
+        let isPanelAvailable = false; 
+        let isPanelVisible = false;
+        let hideTimer;
+        
+        const aMinorFreqs = [
+            27.50, 32.70, 36.71, 41.20, 51.91, 55.00, 65.41, 73.42, 82.41, 103.83, 
+            110.00, 130.81, 146.83, 164.81, 207.65, 220.00, 261.63, 293.66, 329.63, 415.30,
+            440.00, 523.25, 587.33, 659.25, 830.61, 880.00, 1046.50, 1174.66, 1318.51, 1661.22,
+            1760.00, 2093.00, 2349.32, 2637.02, 3322.44, 3520.00
+        ];
+
+        const notesInOrder = ["A", "C", "D", "E", "G"];
+
+        const bands = [
+            { name: "Felt", range: [20, 60], type: 'sawtooth', sens: 8.5, vol: 0.55, scaleOffset: 0 },
+            { name: "Deep", range: [60, 150], type: 'sawtooth', sens: 4.5, vol: 0.35, scaleOffset: 5 },
+            { name: "Center", range: [150, 600], type: 'sine', sens: 7.0, vol: 0.4, scaleOffset: 10 },
+            { name: "Harmony", range: [600, 3000], type: 'sine', sens: 9.0, vol: 0.3, scaleOffset: 15 },
+            { name: "Air", range: [3000, 16000], type: 'sine', sens: 12.0, vol: 0.2, scaleOffset: 20 }
+        ];
+
+        let oscillators = []; 
+
+        function toggleAbout() {
+            document.getElementById('about-popup').classList.toggle('open');
+        }
+
+        function togglePause() {
+            if (!isStarted) return;
+            isPaused = !isPaused;
+            if (isPaused) {
+                p5.prototype.getAudioContext().suspend();
+                document.getElementById('pause-icon').innerText = "▶";
+                document.getElementById('status-msg').innerText = "System suspended";
+            } else {
+                p5.prototype.getAudioContext().resume();
+                document.getElementById('pause-icon').innerText = "⏸";
+                document.getElementById('status-msg').innerText = "System active";
+            }
+        }
+
+        function toggleRecord() {
+            if (!isStarted) return;
+            
+            if (!isRecording) {
+                recorder.record(soundFile);
+                isRecording = true;
+                document.getElementById('record-icon').innerText = "■";
+                document.getElementById('recording-indicator').style.display = "block";
+                document.getElementById('status-msg').innerText = "Recording...";
+            } else {
+                recorder.stop();
+                isRecording = false;
+                document.getElementById('record-icon').innerText = "●";
+                document.getElementById('recording-indicator').style.display = "none";
+                
+                saveSound(soundFile, `room-tone-${new Date().getTime()}.wav`);
+                
+                document.getElementById('status-msg').innerText = "WAV downloaded";
+                soundFile = new p5.SoundFile();
+            }
+        }
+
+        function setup() {
+            const canvas = createCanvas(windowWidth, windowHeight);
+            canvas.parent('canvas-container');
+            textFont('Inter');
+            
+            mic = new p5.AudioIn();
+            fft = new p5.FFT(0.88, 1024);
+            reverb = new p5.Reverb();
+            
+            recorder = new p5.SoundRecorder();
+            recorder.setInput(); 
+            soundFile = new p5.SoundFile();
+
+            const sliderContainer = document.getElementById('band-sliders');
+            
+            bands.forEach((band, i) => {
+                let group = { 
+                    main: null, 
+                    harmonics: [], 
+                    filter: new p5.LowPass(), 
+                    lastFreq: 0,
+                    smoothEnergy: 0
+                };
+                group.main = new p5.Oscillator(band.type);
+                group.main.disconnect();
+                group.main.connect(group.filter);
+                
+                for(let h=0; h<2; h++) {
+                    let hOsc = new p5.Oscillator(band.type);
+                    hOsc.disconnect();
+                    hOsc.connect(group.filter);
+                    group.harmonics.push(hOsc);
+                }
+
+                group.filter.freq(band.range[1] * 1.5);
+                reverb.process(group.filter, 8, 2); 
+                oscillators.push(group);
+
+                const bandCard = document.createElement('div');
+                bandCard.className = 'band-card';
+                bandCard.innerHTML = `
+                    <div class="label-group mb-2">
+                        <span>${band.name}</span>
+                        <span id="note-${i}">--</span>
+                    </div>
+                    <div class="control-row">
+                        <span class="section-header">Sensitivity</span>
+                        <input type="range" id="sens-${i}" min="0" max="35" step="0.1" value="${band.sens}">
+                    </div>
+                    <div class="control-row">
+                        <span class="section-header">Volume</span>
+                        <input type="range" id="vol-${i}" min="0" max="1" step="0.01" value="${band.vol}">
+                    </div>
+                `;
+                sliderContainer.appendChild(bandCard);
+            });
+
+            document.getElementById('reverbSlider').oninput = (e) => {
+                let val = parseFloat(e.target.value);
+                reverb.set(val, 2);
+                document.getElementById('reverb-val').innerText = val.toFixed(1) + "s";
+            };
+        }
+
+        async function startAudio() {
+            userStartAudio().then(() => {
+                if (!isStarted) {
+                    mic.start(() => {
+                        fft.setInput(mic);
+                        oscillators.forEach(group => {
+                            group.main.start();
+                            group.harmonics.forEach(h => h.start());
+                        });
+                        isStarted = true;
+                        
+                        document.getElementById('init-audio-overlay').style.display = 'none';
+                        document.getElementById('status-msg').innerText = "System active";
+
+                        setTimeout(() => {
+                            isPanelAvailable = true;
+                            showPanel();
+                        }, 10000);
+                    });
+                }
+            });
+        }
+
+        function handleMouseMove() {
+            if (!isStarted || !isPanelAvailable) return;
+
+            clearTimeout(hideTimer);
+
+            if (!isPanelVisible) {
+                showPanel();
+            }
+
+            hideTimer = setTimeout(() => {
+                hidePanel();
+            }, 10000);
+        }
+
+        function showPanel() {
+            isPanelVisible = true;
+            document.getElementById('controls').classList.add('visible');
+            resizeCanvas(windowWidth - 320, windowHeight);
+        }
+
+        function hidePanel() {
+            isPanelVisible = false;
+            document.getElementById('controls').classList.remove('visible');
+            resizeCanvas(windowWidth, windowHeight);
+        }
+
+        function draw() {
+            background(239);
+            if (!isStarted || isPaused) return;
+            
+            fft.analyze();
+            let canvasWidth = isPanelVisible ? width : windowWidth;
+            let colWidth = canvasWidth / bands.length;
+
+            stroke(0, 15);
+            for(let i=1; i<bands.length; i++) line(i * colWidth, 0, i * colWidth, height);
+
+            bands.forEach((band, i) => {
+                let energy = fft.getEnergy(band.range[0], band.range[1]);
+                let sens = parseFloat(document.getElementById(`sens-${i}`).value);
+                let volMult = parseFloat(document.getElementById(`vol-${i}`).value);
+                
+                oscillators[i].smoothEnergy = lerp(oscillators[i].smoothEnergy, energy, 0.4);
+                
+                let ampFactor = (i === 0) ? 0.28 : 0.22;
+                let baseAmp = map(oscillators[i].smoothEnergy, 0, 255, 0, ampFactor) * (sens/10) * volMult;
+                oscillators[i].main.amp(baseAmp, 0.05);
+                
+                let noteIdx = floor(map(oscillators[i].smoothEnergy, 0, 255, 0, 4.9)); 
+                let freqIdx = constrain(band.scaleOffset + noteIdx, 0, aMinorFreqs.length - 1);
+                let fundamental = aMinorFreqs[freqIdx];
+                
+                oscillators[i].main.freq(fundamental, 0.05);
+                
+                document.getElementById(`note-${i}`).innerText = getHarmonizedNote(freqIdx);
+
+                oscillators[i].harmonics[0].freq(fundamental * 1.5, 0.1); 
+                oscillators[i].harmonics[0].amp(baseAmp * 0.25, 0.05);
+                oscillators[i].harmonics[1].freq(fundamental * 2.25, 0.1); 
+                oscillators[i].harmonics[1].amp(baseAmp * 0.12, 0.05);
+
+                drawColumnVisual(i, colWidth, oscillators[i].smoothEnergy, sens, fundamental);
+            });
+        }
+
+        function drawColumnVisual(idx, colW, energy, sens, currentFreq) {
+            let xStart = idx * colW;
+            let intensity = map(energy, 0, 255, 0, 1) * (sens/10);
+            let cx = xStart + colW/2;
+
+            push();
+            clipColumn(xStart, colW);
+            
+            let steps = 15;
+            let stepH = height / steps;
+            noStroke();
+            for(let s=0; s<steps; s++) {
+                let active = random() < intensity;
+                if(active) {
+                    fill(0, random(80, 220));
+                    let xOffset = random(-2, 2);
+                    rect(xStart + 10 + xOffset, s * stepH + 2, colW - 20, stepH - 4, 1);
+                }
+            }
+
+            textAlign(CENTER);
+            noStroke();
+            fill(0, map(intensity, 0, 1, 40, 150));
+            textSize(10);
+            textStyle(BOLD);
+            text(currentFreq.toFixed(1) + " Hz", cx, height - 38); 
+            
+            pop();
+        }
+
+        function clipColumn(x, w) {
+            let c = drawingContext;
+            c.save();
+            c.beginPath();
+            c.rect(x, 0, w, height);
+            c.clip();
+        }
+
+        function getHarmonizedNote(idx) {
+            let oct = floor(idx / 5);
+            let n = notesInOrder[idx % 5];
+            return `${n}${oct}`;
+        }
+
+        function windowResized() {
+            resizeCanvas(isPanelVisible ? windowWidth - 320 : windowWidth, windowHeight);
+        }
+    </script>
+</body>
+</html>
